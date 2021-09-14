@@ -1,0 +1,44 @@
+[package]
+name = "pingservers"
+version = "0.1.0"
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+tokio = { version = "1.0.0", features = ["full", "tracing"] }
+tokio-util = { version = "0.6.3", features = ["full"] }
+tokio-stream = { version = "0.1" }
+
+tracing = "0.1"
+tracing-subscriber = { version = "0.2.7", default-features = false, features = ["fmt", "ansi", "env-filter", "chrono", "tracing-log"] }
+bytes = "1.0.0"
+futures = { version = "0.3.0", features = ["thread-pool"]}
+http = "0.2"
+serde = "1.0"
+serde_derive = "1.0"
+serde_json = "1.0"
+httparse = "1.0"
+time = "0.1"
+once_cell = "1.5.2"
+rand = "0.8.3"
+
+mio = "*"
+smol = "*"
+async-std = "*"
+
+[[bin]]
+name = "pingserver_asyncstd"
+path = "src/asyncstd.rs"
+
+[[bin]]
+name = "pingserver_mio"
+path = "src/mio.rs"
+
+[[bin]]
+name = "pingserver_tokio"
+path = "src/tokio.rs"
+
+[[bin]]
+name = "pingserver_smol"
+path = "src/smol.rs"
