@@ -1,6 +1,6 @@
-use tokio::runtime::Builder;
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use tokio::net::TcpListener;
+use tokio::runtime::Builder;
 
 use std::error::Error;
 
@@ -43,8 +43,13 @@ async fn main() -> Result<(), Box<dyn Error>> {
                 }
 
                 if &buf[0..6] == b"PING\r\n" || &buf[0..6] == b"ping\r\n" {
-                    socket.write_all(b"PONG\r\n").await.expect("failed to write response to socket");
-                    buf.write_all(&[0,0,0,0,0,0]).await.expect("failed to clear buffer");
+                    socket
+                        .write_all(b"PONG\r\n")
+                        .await
+                        .expect("failed to write response to socket");
+                    buf.write_all(&[0, 0, 0, 0, 0, 0])
+                        .await
+                        .expect("failed to clear buffer");
                 }
             }
         });

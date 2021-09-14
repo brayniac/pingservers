@@ -18,7 +18,6 @@ fn main() -> io::Result<()> {
     let mut poll = Poll::new()?;
     let mut events = Events::with_capacity(1024);
 
-
     let addr = ADDR.parse().unwrap();
     let mut server = TcpListener::bind(addr)?;
 
@@ -47,11 +46,8 @@ fn main() -> io::Result<()> {
                     };
 
                     let token = next(&mut unique_token);
-                    poll.registry().register(
-                        &mut connection,
-                        token,
-                        Interest::READABLE,
-                    )?;
+                    poll.registry()
+                        .register(&mut connection, token, Interest::READABLE)?;
 
                     let session = Session {
                         connection,
@@ -111,7 +107,7 @@ fn handle_connection_event(
 
         if &session.buffer[0..6] == b"PING\r\n" || &session.buffer[0..6] == b"ping\r\n" {
             session.connection.write_all(b"PONG\r\n")?;
-            session.buffer.write_all(&[0,0,0,0,0,0])?;
+            session.buffer.write_all(&[0, 0, 0, 0, 0, 0])?;
         }
 
         if connection_closed {
