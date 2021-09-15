@@ -1,7 +1,7 @@
 use mio::event::Event;
 use mio::net::{TcpListener, TcpStream};
 use mio::{Events, Interest, Poll, Registry, Token};
-use std::collections::HashMap;
+use ahash::AHashMap;
 use std::io::{self, Read, Write};
 
 const SERVER: Token = Token(0);
@@ -24,7 +24,7 @@ fn main() -> io::Result<()> {
     poll.registry()
         .register(&mut server, SERVER, Interest::READABLE)?;
 
-    let mut connections = HashMap::new();
+    let mut connections = AHashMap::new();
     let mut unique_token = Token(SERVER.0 + 1);
 
     println!("listening on: {}", ADDR);

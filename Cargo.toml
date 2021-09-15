@@ -26,10 +26,22 @@ rand = "0.8.3"
 mio = "*"
 smol = "*"
 async-std = "*"
+ahash = "*"
+anyhow = "1"
+socket2 = "0.4"
+slab = "0.4"
+io-uring = "*"
+bitflags = "1"
+libc = { version = "0.2.98", default-features = false }
+sc = { version = "0.2", optional = true }
 
 [[bin]]
 name = "pingserver_asyncstd"
 path = "src/asyncstd.rs"
+
+[[bin]]
+name = "pingserver_iouring"
+path = "src/iouring.rs"
 
 [[bin]]
 name = "pingserver_mio"
