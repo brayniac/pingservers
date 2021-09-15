@@ -1,23 +1,13 @@
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use tokio::net::TcpListener;
-use tokio::runtime::Builder;
 
 use std::error::Error;
 
 const ADDR: &str = "0.0.0.0:12321";
 
-#[tokio::main]
+#[tokio::main(flavor = "current_thread")]
 async fn main() -> Result<(), Box<dyn Error>> {
     println!("starting pingserver_tokio_current");
-    let runtime = Builder::new_current_thread()
-        .worker_threads(1)
-        .thread_name("ping_worker")
-        .thread_stack_size(3 * 1024 * 1024)
-        .enable_all()
-        .build()
-        .unwrap();
-
-    let _guard = runtime.enter();
 
     let listener = TcpListener::bind(&ADDR).await?;
     println!("Listening on: {}", ADDR);
