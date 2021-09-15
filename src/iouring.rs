@@ -191,20 +191,18 @@ fn main() -> anyhow::Result<()> {
                             }
                         } else {
                             (*buf).as_mut().write_all(&[0u8; 2048]);
-                            *token = Token::Write {
+                            *token = Token::Read {
                                 fd,
                                 buf_index,
-                                len,
-                                offset: 0,
                             };
 
-                            let write_e = opcode::Send::new(types::Fd(fd), buf.as_ptr(), len as _)
+                            let read_e = opcode::Recv::new(types::Fd(fd), buf.as_mut_ptr(), buf.len() as _)
                                 .build()
                                 .user_data(token_index as _);
 
                             unsafe {
-                                if sq.push(&write_e).is_err() {
-                                    backlog.push_back(write_e);
+                                if sq.push(&read_e).is_err() {
+                                    backlog.push_back(read_e);
                                 }
                             }
                         }
