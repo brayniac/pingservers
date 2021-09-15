@@ -6,7 +6,7 @@ use std::io::{self, Read, Write};
 
 const SERVER: Token = Token(0);
 
-const ADDR: &str = "127.0.0.1:12321";
+const ADDR: &str = "0.0.0.0:12321";
 
 struct Session {
     connection: TcpStream,

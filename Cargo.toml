@@ -36,8 +36,12 @@ name = "pingserver_mio"
 path = "src/mio.rs"
 
 [[bin]]
-name = "pingserver_tokio"
-path = "src/tokio.rs"
+name = "pingserver_tokio_current"
+path = "src/tokio_current.rs"
+
+[[bin]]
+name = "pingserver_tokio_multi"
+path = "src/tokio_multi.rs"
 
 [[bin]]
 name = "pingserver_smol"

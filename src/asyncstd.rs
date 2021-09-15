@@ -11,7 +11,7 @@ type Result<T> = std::result::Result<T, Box<dyn std::error::Error + Send + Sync>
 #[derive(Debug)]
 enum Void {}
 
-const ADDR: &str = "127.0.0.1:12321";
+const ADDR: &str = "0.0.0.0:12321";
 
 pub fn main() -> Result<()> {
     task::block_on(accept_loop(ADDR))

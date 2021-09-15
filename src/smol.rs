@@ -8,7 +8,7 @@ fn main() -> io::Result<()> {
     println!("starting pingserver_smol");
     smol::block_on(async {
         // Create a listener.
-        let listener = Async::<TcpListener>::bind(([127, 0, 0, 1], 12321))?;
+        let listener = Async::<TcpListener>::bind(([0, 0, 0, 0], 12321))?;
         println!("Listening on {}", listener.get_ref().local_addr()?);
 
         // Accept clients in a loop.

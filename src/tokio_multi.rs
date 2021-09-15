@@ -4,11 +4,11 @@ use tokio::runtime::Builder;
 
 use std::error::Error;
 
-const ADDR: &str = "127.0.0.1:12321";
+const ADDR: &str = "0.0.0.0:12321";
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
-    println!("starting pingserver_tokio");
+    println!("starting pingserver_tokio_multi");
     let runtime = Builder::new_multi_thread()
         .worker_threads(1)
         .thread_name("ping_worker")
