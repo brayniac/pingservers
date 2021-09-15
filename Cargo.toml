@@ -26,11 +26,10 @@ rand = "0.8.3"
 mio = "*"
 smol = "*"
 async-std = "*"
-ahash = "*"
 anyhow = "1"
 socket2 = "0.4"
 slab = "0.4"
-io-uring = "*"
+io-uring = { version = "*", optional = true }
 bitflags = "1"
 libc = { version = "0.2.98", default-features = false }
 sc = { version = "0.2", optional = true }
@@ -42,6 +41,7 @@ path = "src/asyncstd.rs"
 [[bin]]
 name = "pingserver_iouring"
 path = "src/iouring.rs"
+required-features = ["iouring"]
 
 [[bin]]
 name = "pingserver_mio"
@@ -58,3 +58,6 @@ path = "src/tokio_multi.rs"
 [[bin]]
 name = "pingserver_smol"
 path = "src/smol.rs"
+
+[features]
+iouring = ["io-uring"]

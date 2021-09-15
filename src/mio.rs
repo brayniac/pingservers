@@ -1,10 +1,11 @@
 use mio::event::Event;
 use mio::net::{TcpListener, TcpStream};
 use mio::{Events, Interest, Poll, Registry, Token};
-use ahash::AHashMap;
+use slab::Slab;
+
 use std::io::{self, Read, Write};
 
-const SERVER: Token = Token(0);
+const SERVER: Token = Token(usize::MAX);
 
 const ADDR: &str = "0.0.0.0:12321";
 
@@ -24,8 +25,7 @@ fn main() -> io::Result<()> {
     poll.registry()
         .register(&mut server, SERVER, Interest::READABLE)?;
 
-    let mut connections = AHashMap::new();
-    let mut unique_token = Token(SERVER.0 + 1);
+    let mut connections = Slab::with_capacity(1024);
 
     println!("listening on: {}", ADDR);
 
@@ -45,7 +45,10 @@ fn main() -> io::Result<()> {
                         }
                     };
 
-                    let token = next(&mut unique_token);
+                    let session_entry = connections.vacant_entry();
+                    let token = Token(session_entry.key());
+
+                    // let token = next(&mut unique_token);
                     poll.registry()
                         .register(&mut connection, token, Interest::READABLE)?;
 
@@ -54,16 +57,18 @@ fn main() -> io::Result<()> {
                         buffer: vec![0; 1024],
                     };
 
-                    connections.insert(token, session);
+                    session_entry.insert(session);
+
+                    // connections.insert(token, session);
                 },
                 token => {
-                    let done = if let Some(connection) = connections.get_mut(&token) {
+                    let done = if let Some(connection) = connections.get_mut(token.0) {
                         handle_connection_event(poll.registry(), connection, event)?
                     } else {
                         false
                     };
                     if done {
-                        connections.remove(&token);
+                        connections.remove(token.0);
                     }
                 }
             }
@@ -71,15 +76,9 @@ fn main() -> io::Result<()> {
     }
 }
 
-fn next(current: &mut Token) -> Token {
-    let next = current.0;
-    current.0 += 1;
-    Token(next)
-}
-
 /// Returns `true` if the connection is done.
 fn handle_connection_event(
-    registry: &Registry,
+    _registry: &Registry,
     session: &mut Session,
     event: &Event,
 ) -> io::Result<bool> {
